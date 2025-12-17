@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users - Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio Admin</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="admin-dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="admin-appointments.html" class="nav-link">Appointments</a></li>
+        <li><a href="admin-services.html" class="nav-link">Services</a></li>
+        <li><a href="admin-users.html" class="nav-link active">Users</a></li>
+        <li><a href="admin-profile.html" class="nav-link">Profile</a></li>
+        <li><a href="#" class="nav-link" id="logoutBtn">Logout</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Manage Users</h1>
+        <p class="dashboard-subtitle">Add, edit, or delete users (user, lash artist, admin)</p>
+      </div>
+
+      <div class="search-add-container">
+        <input type="text" id="searchInput" placeholder="Search users...">
+        <select id="userTypeFilter">
+          <option value="">All Types</option>
+          <option value="user">User</option>
+          <option value="artist">Lash Artist</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button class="add-btn" onclick="openUserModal()">+ Add New User</button>
+      </div>
+
+      <div class="users-container" id="usersContainer">
+        <!-- Users will be populated here as cards -->
+      </div>
+    </div>
+  </main>
+
+  <!-- User Modal -->
+  <div id="userModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeUserModal()">&times;</span>
+      <h2 id="userModalTitle">Add User</h2>
+      <form id="userForm" enctype="multipart/form-data">
+        <input type="hidden" id="userId">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" id="userName" required>
+        </div>
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" id="userUsername" required>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="userEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="userPassword" minlength="6">
+          <small id="passwordHint">Leave blank to keep current password (edit only)</small>
+        </div>
+        <div class="form-group">
+          <label>User Type *</label>
+          <select id="userType" required>
+            <option value="user">User</option>
+            <option value="artist">Lash Artist</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Save User</button>
+        <button type="button" class="btn-secondary" onclick="closeUserModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+      // Hamburger menu functionality
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      requireAuth();
+      checkAdminAccess();
+      loadAdminUsers();
+
+      $('#searchInput').on('input', loadAdminUsers);
+      $('#userTypeFilter').on('change', loadAdminUsers);
+      $('#userForm').on('submit', handleUserSubmit);
+    });
+  </script>
+</body>
+</html>
+

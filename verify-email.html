@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Email - LashStudio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .verification-code-input {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+      padding: 0 1rem;
+    }
+
+    .verification-code-input input {
+      width: 50px;
+      height: 60px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      transition: var(--transition);
+      flex-shrink: 0;
+      padding: 0;
+      line-height: 1;
+      overflow: visible;
+    }
+
+    .verification-code-input input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+
+    /* Mobile responsive styles for verification code inputs */
+    @media (max-width: 768px) {
+      .verification-code-input {
+        gap: 8px;
+        padding: 0 0.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .verification-code-input input {
+        width: 45px;
+        height: 55px;
+        font-size: 22px;
+        line-height: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .verification-code-input {
+        gap: 6px;
+        padding: 0;
+        margin: 1.5rem 0;
+      }
+
+      .verification-code-input input {
+        width: 40px;
+        height: 50px;
+        font-size: 20px;
+        line-height: 1;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .verification-code-input {
+        gap: 4px;
+      }
+
+      .verification-code-input input {
+        width: 36px;
+        height: 46px;
+        font-size: 18px;
+        line-height: 1;
+      }
+    }
+
+    .resend-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .resend-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .resend-link a:hover {
+      text-decoration: underline;
+    }
+
+    .success-message {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      display: none;
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      display: none;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid #1e3a8a;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 4px;
+    }
+
+    .info-box p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .email-display {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="login.html" class="nav-link">Login</a></li>
+        <li><a href="register.html" class="nav-link">Register</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="form-container">
+      <h2>Verify Your Email</h2>
+      
+      <div class="info-box">
+        <p>We've sent a 6-digit verification code to:</p>
+        <p class="email-display" id="emailDisplay"></p>
+      </div>
+
+      <div id="successMessage" class="success-message"></div>
+      <div id="errorMessage" class="error-message"></div>
+
+      <form id="verifyForm">
+        <label>Enter Verification Code:</label>
+        <div class="verification-code-input">
+          <input type="text" maxlength="1" id="code1" required autocomplete="off">
+          <input type="text" maxlength="1" id="code2" required autocomplete="off">
+          <input type="text" maxlength="1" id="code3" required autocomplete="off">
+          <input type="text" maxlength="1" id="code4" required autocomplete="off">
+          <input type="text" maxlength="1" id="code5" required autocomplete="off">
+          <input type="text" maxlength="1" id="code6" required autocomplete="off">
+        </div>
+
+        <button type="submit">Verify Email</button>
+      </form>
+
+      <div class="resend-link">
+        <p>Didn't receive the code? <a href="#" id="resendLink">Resend Code</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script>
+    const API_URL = 'http://127.0.0.1:8000/api';
+    
+    // Get email and code from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    const code = urlParams.get('code');
+    const fromLogin = urlParams.get('from') === 'login';
+
+    if (!email) {
+      window.location.href = 'login.html';
+    }
+
+    $(document).ready(function() {
+      $('#emailDisplay').text(email);
+
+      // Update info message if coming from login (account created by admin)
+      if (fromLogin) {
+        const $infoBox = $('.info-box');
+        if ($infoBox.length) {
+          $infoBox.html(`
+            <p><strong>Account Activation Required</strong></p>
+            <p>Your account was created but needs to be verified before you can log in.</p>
+            <p>A verification code has been sent to:</p>
+            <p class="email-display">${email}</p>
+          `);
+        }
+      }
+
+      // Auto-focus and navigation between inputs
+      const $inputs = $('.verification-code-input input');
+      
+      // If code is provided in URL, auto-fill it first
+      if (code && code.length === 6) {
+        const digits = code.split('').slice(0, 6);
+        digits.forEach((digit, i) => {
+          if ($inputs.eq(i).length) {
+            $inputs.eq(i).val(digit);
+          }
+        });
+        
+        // Show a message that code is pre-filled
+        const $infoBox = $('.info-box');
+        if ($infoBox.length) {
+          $infoBox.append('<p style="margin-top: 1rem; color: #2ecc71; font-weight: 600;">✓ Verification code has been pre-filled. Click "Verify Email" to confirm.</p>');
+        }
+      }
+      
+      $inputs.each(function(index) {
+        $(this).on('input', function(e) {
+          if ($(this).val().length === 1) {
+            if (index < $inputs.length - 1) {
+              $inputs.eq(index + 1).focus();
+            }
+          }
+        });
+
+        $(this).on('keydown', function(e) {
+          if (e.key === 'Backspace' && !$(this).val() && index > 0) {
+            $inputs.eq(index - 1).focus();
+          }
+        });
+
+        // Only allow numbers
+        $(this).on('keypress', function(e) {
+          if (!/[0-9]/.test(e.key)) {
+            e.preventDefault();
+          }
+        });
+
+        // Handle paste
+        $(this).on('paste', function(e) {
+          e.preventDefault();
+          const pasteData = e.originalEvent.clipboardData.getData('text');
+          const digits = pasteData.replace(/\D/g, '').split('').slice(0, 6);
+          
+          digits.forEach((digit, i) => {
+            if ($inputs.eq(i).length) {
+              $inputs.eq(i).val(digit);
+            }
+          });
+          
+          if (digits.length === 6) {
+            $inputs.eq(5).focus();
+          }
+        });
+      });
+
+      // Auto-focus first input (or submit button if code is pre-filled)
+      if (code && code.length === 6) {
+        // Focus the submit button to make it easy to verify
+        setTimeout(() => {
+          const $submitBtn = $('#verifyForm button[type="submit"]');
+          if ($submitBtn.length) {
+            $submitBtn.focus();
+          }
+        }, 100);
+      } else {
+        $inputs.eq(0).focus();
+      }
+
+      // Hamburger menu
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      // Create particles
+      function createParticles() {
+        const $particlesContainer = $('#particles');
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+          const $particle = $('<div>', { class: 'particle' });
+          $particle.css({
+            'left': Math.random() * 100 + '%',
+            'width': Math.random() * 4 + 2 + 'px',
+            'height': Math.random() * 4 + 2 + 'px',
+            'animation-delay': Math.random() * 15 + 's',
+            'animation-duration': (Math.random() * 10 + 10) + 's'
+          });
+          $particlesContainer.append($particle);
+        }
+      }
+
+      createParticles();
+
+      // Handle verification form submission
+      $('#verifyForm').on('submit', async function(e) {
+        e.preventDefault();
+        
+        const code = $inputs.map(function() { return $(this).val(); }).get().join('');
+        
+        if (code.length !== 6) {
+          if (typeof showToast === 'function') {
+            showToast('Please enter all 6 digits', 'warning');
+          } else {
+            showError('Please enter all 6 digits');
+          }
+          return;
+        }
+
+        const $submitButton = $(this).find('button[type="submit"]');
+        let buttonState = null;
+        
+        if (typeof setButtonLoading === 'function') {
+          buttonState = setButtonLoading($submitButton, 'Verifying...');
+        } else {
+          $submitButton.prop('disabled', true).text('Verifying...');
+        }
+
+        try {
+          const res = await fetch(`${API_URL}/auth/verify-code`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, code })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            if (typeof showToast === 'function') {
+              showToast(data.error || 'Invalid verification code', 'error');
+            } else {
+              showError(data.error || 'Invalid verification code');
+            }
+            $inputs.val('');
+            $inputs.eq(0).focus();
+            return;
+          }
+
+          if (typeof showToast === 'function') {
+            showToast('Email verified successfully! Redirecting to login...', 'success');
+          } else {
+            showSuccess('Email verified successfully! Redirecting to login...');
+          }
+          
+          if (typeof showPageLoading === 'function') {
+            showPageLoading('Success!', 'Redirecting to login...');
+          }
+          
+          setTimeout(() => {
+            window.location.href = 'login.html?verified=1';
+          }, 2000);
+
+        } catch (err) {
+          console.error('Verification error:', err);
+          if (typeof showToast === 'function') {
+            showToast('Network error. Please try again.', 'error');
+          } else {
+            showError('Network error. Please try again.');
+          }
+        } finally {
+          if (typeof resetButtonLoading === 'function' && buttonState) {
+            resetButtonLoading($submitButton, buttonState);
+          } else {
+            $submitButton.prop('disabled', false).text('Verify Email');
+          }
+        }
+      });
+
+      // Handle resend code
+      $('#resendLink').on('click', async function(e) {
+        e.preventDefault();
+        
+        const $link = $(this);
+        const originalText = $link.text();
+        $link.text('Sending...').css('pointer-events', 'none');
+
+        let toastId = null;
+        if (typeof showToast === 'function') {
+          toastId = showToast('Sending new verification code...', 'loading', 0);
+        }
+
+        try {
+          const res = await fetch(`${API_URL}/auth/resend`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+          });
+
+          const data = await res.json();
+          
+          if (toastId && typeof updateToast === 'function') {
+            updateToast(toastId, data.message || 'New code sent to your email!', 'success');
+          } else {
+            showSuccess(data.message || 'New code sent to your email!');
+          }
+          
+          $inputs.val('');
+          $inputs.eq(0).focus();
+
+        } catch (err) {
+          console.error('Resend error:', err);
+          if (toastId && typeof updateToast === 'function') {
+            updateToast(toastId, 'Failed to resend code. Please try again.', 'error');
+          } else {
+            showError('Failed to resend code. Please try again.');
+          }
+        } finally {
+          setTimeout(() => {
+            $link.text(originalText).css('pointer-events', 'auto');
+          }, 3000);
+        }
+      });
+    });
+
+    function showSuccess(message) {
+      const $successDiv = $('#successMessage');
+      const $errorDiv = $('#errorMessage');
+      $errorDiv.hide();
+      $successDiv.text(message).show();
+      setTimeout(() => {
+        $successDiv.hide();
+      }, 5000);
+    }
+
+    function showError(message) {
+      const $successDiv = $('#successMessage');
+      const $errorDiv = $('#errorMessage');
+      $successDiv.hide();
+      $errorDiv.text(message).show();
+      setTimeout(() => {
+        $errorDiv.hide();
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
+

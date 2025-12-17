@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment - LashStudio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">My Bookings</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="lash-artists.html" class="nav-link">Lash Artists</a></li>
+        <li><a href="book-appointment.html" class="nav-link">Book Now</a></li>
+        <li><a href="profile.html" class="nav-link">Profile</a></li>
+        <li><a href="#" class="nav-link" id="logoutBtn">Logout</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Book an Appointment</h1>
+        <p class="dashboard-subtitle">Schedule your next visit with us</p>
+      </div>
+
+      <div class="form-container">
+        <form id="bookingForm">
+          <div class="form-group">
+            <label for="service">Select Service *</label>
+            <select id="service" name="service_id" required>
+              <option value="">Choose a service...</option>
+            </select>
+            <div id="serviceInfo" class="info-display"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="barber">Select Lash Artist *</label>
+            <select id="barber" name="lash_artist_id" required>
+              <option value="">Choose a lash artist...</option>
+            </select>
+            <div id="barberInfo" class="info-display"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="booking_date">Date *</label>
+            <input type="date" id="booking_date" name="booking_date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="booking_time">Available Time Slots *</label>
+            <select id="booking_time" name="booking_time" required disabled>
+              <option value="">Select date and lash artist first...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Additional Notes</label>
+            <textarea id="notes" name="notes" rows="4" placeholder="Any special requests or preferences..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Book Appointment</button>
+          <button type="button" class="btn-secondary" onclick="window.location.href='dashboard.html'">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+      // Hamburger menu functionality
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      function createParticles() {
+        const $particlesContainer = $('#particles');
+        if (!$particlesContainer.length) return;
+        
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+          const $particle = $('<div>', { class: 'particle' });
+          $particle.css({
+            'left': Math.random() * 100 + '%',
+            'width': Math.random() * 4 + 2 + 'px',
+            'height': Math.random() * 4 + 2 + 'px',
+            'animation-delay': Math.random() * 15 + 's',
+            'animation-duration': (Math.random() * 10 + 10) + 's'
+          });
+          $particlesContainer.append($particle);
+        }
+      }
+
+      createParticles();
+      requireAuth();
+      
+      // Load services and lash artists
+      loadServiceOptions();
+      loadLashArtistOptions();
+
+      // Set min date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      $('#booking_date').attr('min', tomorrowStr);
+
+      // Handle form submission
+      $('#bookingForm').on('submit', handleBookingSubmit);
+
+      // Load available slots when date or lash artist changes
+      $('#booking_date').on('change', loadAvailableSlots);
+      $('#barber').on('change', loadAvailableSlots);
+    });
+  </script>
+</body>
+</html>
+

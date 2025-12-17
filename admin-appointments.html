@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Appointments - Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio Admin</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="admin-dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="admin-appointments.html" class="nav-link active">Appointments</a></li>
+        <li><a href="admin-services.html" class="nav-link">Services</a></li>
+        <li><a href="admin-users.html" class="nav-link">Users</a></li>
+        <li><a href="admin-profile.html" class="nav-link">Profile</a></li>
+        <li><a href="#" class="nav-link" id="logoutBtn">Logout</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Manage Appointments</h1>
+        <p class="dashboard-subtitle">Approve or decline appointment requests</p>
+      </div>
+
+      <div class="search-add-container">
+        <input type="text" id="searchInput" placeholder="Search by customer, service, lash artist, or date...">
+        <select id="statusFilter">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="appointments-container" id="appointmentsContainer">
+        <!-- Appointments will be populated here -->
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+      // Hamburger menu functionality
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      requireAuth();
+      checkAdminAccess();
+      loadAdminAppointments();
+
+      $('#searchInput').on('input', loadAdminAppointments);
+      $('#statusFilter').on('change', loadAdminAppointments);
+    });
+  </script>
+</body>
+</html>
+

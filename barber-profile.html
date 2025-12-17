@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lash Artist Profile - LashStudio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .password-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .password-input-wrapper input {
+      flex: 1;
+      padding-right: 45px;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .password-toggle:hover {
+      opacity: 1;
+    }
+    .eye-icon {
+      font-size: 0.75rem;
+      user-select: none;
+      color: var(--primary-color, #1e3a8a);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="barber-dashboard.html" class="nav-link">Appointments</a></li>
+        <li><a href="barber-profile.html" class="nav-link active">Profile</a></li>
+        <li><a href="#" class="nav-link" id="logoutBtn">Logout</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">My Profile</h1>
+        <p class="dashboard-subtitle">Update your barber profile information</p>
+      </div>
+
+      <div class="profile-container">
+        <div class="profile-card">
+          <div class="profile-avatar-section">
+            <img id="profileImage" src="http://localhost:8000/storage/uploads/profile.png" alt="Profile Picture" class="profile-avatar-large">
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            <button class="btn btn-secondary" onclick="document.getElementById('imageInput').click()">Change Photo</button>
+          </div>
+
+          <form id="barberProfileForm" class="profile-form">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" disabled>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone">
+            </div>
+
+            <div class="form-group">
+              <label for="specialty">Specialization</label>
+              <input type="text" id="specialty" name="specialty" placeholder="e.g., Fade Specialist, Beard Styling">
+            </div>
+
+            <div class="form-group">
+              <label for="bio">Bio</label>
+              <textarea id="bio" name="bio" rows="4" placeholder="Tell customers about your experience and expertise..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Profile</button>
+            </div>
+          </form>
+
+          <hr style="margin: 2rem 0; border-color: rgba(255,255,255,0.1);">
+
+          <h3 style="color: var(--text-color); margin-bottom: 1rem;">Login Credentials</h3>
+          <form id="credentialsForm" class="profile-form">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+              <label for="current_password">Current Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="current_password" name="current_password" placeholder="Enter current password to make changes">
+                <button type="button" class="password-toggle" onclick="togglePassword('current_password', this)">
+                  <span class="eye-icon">Show</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="new_password">New Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="new_password" name="new_password" placeholder="Leave blank to keep current password">
+                <button type="button" class="password-toggle" onclick="togglePassword('new_password', this)">
+                  <span class="eye-icon">Show</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm_password">Confirm New Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                <button type="button" class="password-toggle" onclick="togglePassword('confirm_password', this)">
+                  <span class="eye-icon">Show</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Update Credentials</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/barber.js"></script>
+  
+  <script>
+    // Toggle password visibility
+    function togglePassword(inputId, button) {
+      const $input = $('#' + inputId);
+      const $eyeIcon = $(button).find('.eye-icon');
+      
+      if ($input.attr('type') === 'password') {
+        $input.attr('type', 'text');
+        $eyeIcon.text('Hide');
+      } else {
+        $input.attr('type', 'password');
+        $eyeIcon.text('Show');
+      }
+    }
+
+    $(document).ready(function() {
+      // Hamburger menu functionality
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      requireAuth();
+      checkLashArtistAccess();
+      loadLashArtistProfile();
+
+      // Handle image upload
+      $('#imageInput').on('change', uploadLashArtistImage);
+
+      // Handle profile form submission
+      $('#barberProfileForm').on('submit', updateLashArtistProfile);
+
+      // Handle credentials form submission
+      $('#credentialsForm').on('submit', updateLashArtistCredentials);
+    });
+  </script>
+</body>
+</html>
+

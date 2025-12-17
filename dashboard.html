@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - LashStudio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="dashboard.html" class="nav-link">My Bookings</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="lash-artists.html" class="nav-link">Lash Artists</a></li>
+        <li><a href="book-appointment.html" class="nav-link">Book Now</a></li>
+        <li><a href="profile.html" class="nav-link">Profile</a></li>
+        <li id="adminLink" style="display: none;"><a href="admin-dashboard.html" class="nav-link">Admin</a></li>
+        <li><a href="#" class="nav-link" id="logoutBtn">Logout</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">My Appointments</h1>
+        <p class="dashboard-subtitle">View and manage your lash extension appointments</p>
+      </div>
+
+      <div class="search-add-container">
+        <select id="statusFilter">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <button class="add-btn" onclick="window.location.href='book-appointment.html'">+ Book Appointment</button>
+      </div>
+
+      <div class="bookings-container" id="bookingsContainer">
+        <!-- Booking cards will be populated here by JavaScript -->
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+      // Hamburger menu functionality
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      function createParticles() {
+        const $particlesContainer = $('#particles');
+        if (!$particlesContainer.length) return;
+        
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+          const $particle = $('<div>', { class: 'particle' });
+          $particle.css({
+            'left': Math.random() * 100 + '%',
+            'width': Math.random() * 4 + 2 + 'px',
+            'height': Math.random() * 4 + 2 + 'px',
+            'animation-delay': Math.random() * 15 + 's',
+            'animation-duration': (Math.random() * 10 + 10) + 's'
+          });
+          $particlesContainer.append($particle);
+        }
+      }
+
+      createParticles();
+      requireAuth();
+      checkUserType();
+      loadMyBookings();
+
+      // Status filter
+      $('#statusFilter').on('change', loadMyBookings);
+    });
+
+    async function checkUserType() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const res = await fetch('http://127.0.0.1:8000/api/users/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user && data.user.user_type === 'admin') {
+            $('#adminLink').show();
+          }
+        }
+      } catch (err) {
+        console.error('Error checking user type:', err);
+      }
+    }
+  </script>
+</body>
+</html>

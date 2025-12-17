@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - LashStudio</title>
+  <style>
+    /* ========================================
+   Back to Dashboard Navigation Styles
+   ======================================== */
+
+    /* Dashboard Navigation Variant */
+    .nav-dashboard {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px rgba(30, 58, 138, 0.08);
+    }
+
+    .nav-dashboard .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Back to Dashboard Link */
+    .back-to-dashboard {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 0.625rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 4px rgba(30, 58, 138, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Shine effect */
+    .back-to-dashboard::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .back-to-dashboard:hover::before {
+      left: 100%;
+    }
+
+    .back-to-dashboard:hover {
+      background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+      transform: translateX(-3px);
+      box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+    }
+
+    .back-to-dashboard:active {
+      transform: translateX(-1px);
+      box-shadow: 0 1px 2px rgba(30, 58, 138, 0.2);
+    }
+
+    /* Arrow icon animation */
+    .back-to-dashboard .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .back-to-dashboard:hover .arrow {
+      transform: translateX(-3px);
+    }
+
+    /* Alternative: Outlined Style */
+    .back-to-dashboard-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      color: #1e3a8a;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 2px solid #1e3a8a;
+      border-radius: 0.625rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-to-dashboard-outline:hover {
+      background: rgba(30, 58, 138, 0.05);
+      transform: translateX(-3px);
+      border-color: #1e40af;
+      color: #1e40af;
+    }
+
+    .back-to-dashboard-outline .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .back-to-dashboard-outline:hover .arrow {
+      transform: translateX(-3px);
+    }
+
+    /* Alternative: Minimal Style */
+    .back-to-dashboard-minimal {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-to-dashboard-minimal:hover {
+      background: rgba(30, 58, 138, 0.05);
+      color: #1e3a8a;
+      transform: translateX(-2px);
+    }
+
+    .back-to-dashboard-minimal .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .back-to-dashboard-minimal:hover .arrow {
+      transform: translateX(-3px);
+    }
+
+    /* Alternative: Badge Style */
+    .back-to-dashboard-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.1) 0%, rgba(30, 64, 175, 0.1) 100%);
+      color: #1e3a8a;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid rgba(30, 58, 138, 0.2);
+      border-radius: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-to-dashboard-badge:hover {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.15) 0%, rgba(30, 64, 175, 0.15) 100%);
+      border-color: rgba(30, 58, 138, 0.3);
+      transform: translateX(-3px);
+    }
+
+    .back-to-dashboard-badge .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .back-to-dashboard-badge:hover .arrow {
+      transform: translateX(-3px);
+    }
+
+    /* Password toggle styles */
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 55px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .toggle-password:hover {
+      opacity: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-dashboard {
+        padding: 0.875rem 1rem;
+      }
+
+      .nav-dashboard .nav-container {
+        flex-wrap: wrap;
+      }
+
+      .back-to-dashboard,
+      .back-to-dashboard-outline,
+      .back-to-dashboard-minimal,
+      .back-to-dashboard-badge {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-dashboard {
+        padding: 0.75rem 0.875rem;
+      }
+
+      .nav-dashboard .nav-container {
+        gap: 0.5rem;
+      }
+
+      .nav-dashboard .logo {
+        font-size: 1.25rem;
+      }
+
+      .back-to-dashboard,
+      .back-to-dashboard-outline,
+      .back-to-dashboard-minimal,
+      .back-to-dashboard-badge {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8rem;
+      }
+
+      /* Keep text visible for minimal style on mobile */
+      .back-to-dashboard-minimal .text {
+        display: inline;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <nav class="nav-dashboard">
+    <div class="nav-container">
+      <a href="dashboard.html" class="logo">LashStudio</a>
+      <ul class="nav-menu">
+        <li>
+          <a href="dashboard.html" class="back-to-dashboard-minimal">
+            <span class="arrow">←</span>
+            <span class="text">Back to Dashboard</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="profile-container">
+      <h2>My Profile</h2>
+
+      <div id="message" class="message"></div>
+
+      <div class="profile-header">
+        <div class="avatar-container">
+          <img id="avatarImage" class="avatar" src="http://127.0.0.1:8000/storage/uploads/profile.png" alt="Profile Avatar">
+          <label class="avatar-upload" title="Change profile photo">
+            <i>📷</i>
+            <input type="file" id="avatarInput" accept="image/*">
+          </label>
+        </div>
+        <div class="user-info">
+          <h3 id="userName" class="user-name">Loading...</h3>
+          <p id="userUsername" class="user-username">@username</p>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3 class="section-title">Personal Information</h3>
+        <form id="profileForm">
+          <div class="form-group">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit">Update Profile</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="profile-section">
+        <h3 class="section-title">Change Password</h3>
+        <form id="passwordForm">
+          <div class="form-group">
+            <label for="currentPassword">Current Password:</label>
+            <div class="password-wrapper">
+              <input type="password" id="currentPassword" name="current_password" required>
+              <button type="button" class="toggle-password" data-target="currentPassword" aria-label="Toggle password visibility">Show</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="newPassword">New Password:</label>
+            <div class="password-wrapper">
+              <input type="password" id="newPassword" name="new_password" required minlength="6">
+              <button type="button" class="toggle-password" data-target="newPassword" aria-label="Toggle password visibility">Show</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm New Password:</label>
+            <div class="password-wrapper">
+              <input type="password" id="confirmPassword" name="confirm_password" required minlength="6">
+              <button type="button" class="toggle-password" data-target="confirmPassword" aria-label="Toggle password visibility">Show</button>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit">Change Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- <footer>
+    <p>&copy; 2025 LashStudio - Premium Lash Extension Services</p>
+  </footer> -->
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script>
+    // Get user data from localStorage or API
+    let userData = null;
+
+    $(document).ready(async function() {
+      // Initialize password toggle functionality
+      initPasswordToggles();
+
+      // Check if user is logged in
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        showMessage('Please log in to view your profile', 'error');
+        setTimeout(() => window.location.href = 'login.html', 2000);
+        return;
+      }
+
+      // Try to get user data from localStorage first
+      const storedUserData = localStorage.getItem('userData');
+      if (storedUserData) {
+        userData = JSON.parse(storedUserData);
+        populateProfileForm(userData);
+      }
+
+      // Fetch fresh data from API
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/users/me', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+
+        if (response.ok) {
+          userData = (await response.json()).user;
+          localStorage.setItem('userData', JSON.stringify(userData));
+          populateProfileForm(userData);
+        } else if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userData');
+          window.location.href = 'login.html';
+          return;
+        } else {
+          throw new Error('Failed to fetch profile data');
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        if (!userData) {
+          showMessage('Error loading profile data', 'error');
+        }
+      }
+    });
+
+    // Initialize password toggle functionality
+    function initPasswordToggles() {
+      $('.toggle-password').on('click', function() {
+        const targetId = $(this).data('target');
+        const $passwordField = $('#' + targetId);
+        
+        if ($passwordField.length) {
+          // Toggle the type attribute
+          const type = $passwordField.attr('type') === 'password' ? 'text' : 'password';
+          $passwordField.attr('type', type);
+          
+          // Toggle the button text
+          $(this).text(type === 'password' ? 'Show' : 'Hide');
+        }
+      });
+    }
+
+    // Populate form with user data
+    function populateProfileForm(data) {
+      $('#userName').text(data.name || 'User');
+      $('#userUsername').text(`@${data.username}`);
+
+      $('#name').val(data.name || '');
+      $('#username').val(data.username || '');
+      $('#email').val(data.email || '');
+
+      // Set avatar image - FIXED URL
+      if (data.avatar) {
+        const avatarUrl = `http://127.0.0.1:8000/${data.avatar}`;
+        $('#avatarImage').attr('src', avatarUrl);
+        console.log('Avatar loading:', avatarUrl);
+      } else {
+        // Use default profile image
+        $('#avatarImage').attr('src', 'http://127.0.0.1:8000/storage/uploads/profile.png');
+      }
+    }
+
+    // Handle profile form submission - TEXT ONLY
+    $('#profileForm').on('submit', async function(e) {
+      e.preventDefault();
+
+      const $submitButton = $(this).find('button[type="submit"]');
+      const originalText = $submitButton.text();
+
+      // Show loading state
+      $submitButton.prop('disabled', true).text('Updating...');
+
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const formData = new FormData();
+        formData.append('_method', 'PUT');
+        formData.append('name', $('#name').val());
+        formData.append('username', $('#username').val());
+        formData.append('email', $('#email').val());
+
+        console.log('Updating profile (text only)...');
+
+        const response = await fetch('http://127.0.0.1:8000/api/users/me', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: formData
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showMessage('Profile updated successfully!', 'success');
+          // Update local storage with new data
+          if (userData) {
+            userData.name = $('#name').val();
+            userData.username = $('#username').val();
+            userData.email = $('#email').val();
+            localStorage.setItem('userData', JSON.stringify(userData));
+          }
+          // Update displayed name
+          $('#userName').text($('#name').val());
+          $('#userUsername').text(`@${$('#username').val()}`);
+        } else {
+          throw new Error(result.error || 'Failed to update profile');
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        showMessage(error.message, 'error');
+      } finally {
+        // Reset button state
+        $submitButton.prop('disabled', false).text(originalText);
+      }
+    });
+
+    // Handle password form submission
+    $('#passwordForm').on('submit', async function(e) {
+      e.preventDefault();
+
+      const newPassword = $('#newPassword').val();
+      const confirmPassword = $('#confirmPassword').val();
+
+      // Validate passwords match
+      if (newPassword !== confirmPassword) {
+        showMessage('New passwords do not match', 'error');
+        return;
+      }
+
+      // Validate password length
+      if (newPassword.length < 6) {
+        showMessage('Password must be at least 6 characters', 'error');
+        return;
+      }
+
+      const $submitButton = $(this).find('button[type="submit"]');
+      const originalText = $submitButton.text();
+
+      // Show loading state
+      $submitButton.prop('disabled', true).text('Updating...');
+
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const formData = new FormData();
+        formData.append('oldPassword', $('#currentPassword').val());
+        formData.append('newPassword', newPassword);
+
+        console.log('Changing password...');
+
+        const response = await fetch('http://127.0.0.1:8000/api/users/me/password', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: formData
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showMessage('Password updated successfully! Please log in again.', 'success');
+          this.reset();
+          // Clear token and redirect to login after password change
+          localStorage.removeItem('authToken');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2000);
+        } else {
+          throw new Error(result.error || 'Failed to update password');
+        }
+      } catch (error) {
+        console.error('Error updating password:', error);
+        showMessage(error.message, 'error');
+      } finally {
+        // Reset button state
+        $submitButton.prop('disabled', false).text(originalText);
+      }
+    });
+
+    // Handle avatar upload separately
+    $('#avatarInput').on('change', async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        showMessage('Please select an image file', 'error');
+        return;
+      }
+
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showMessage('Image must be less than 5MB', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      try {
+        const authToken = localStorage.getItem('authToken');
+        console.log('Uploading avatar...');
+
+        const response = await fetch('http://127.0.0.1:8000/api/users/me/avatar', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: formData
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem('authToken');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showMessage('Profile picture updated successfully!', 'success');
+          // Update avatar image with the server path
+          const avatarUrl = `http://127.0.0.1:8000/${result.avatar}`;
+          $('#avatarImage').attr('src', avatarUrl);
+          console.log('Avatar updated to:', avatarUrl);
+          // Update user data in localStorage
+          if (userData) {
+            userData.avatar = result.avatar;
+            localStorage.setItem('userData', JSON.stringify(userData));
+          }
+        } else {
+          throw new Error(result.error || 'Failed to update profile picture');
+        }
+      } catch (error) {
+        console.error('Error updating avatar:', error);
+        showMessage(error.message, 'error');
+      }
+    });
+
+    // Show message function
+    function showMessage(message, type) {
+      const $messageEl = $('#message');
+      $messageEl.text(message);
+      $messageEl.attr('class', `message ${type}`);
+      $messageEl.show();
+
+      // Auto-hide success messages after 3 seconds
+      if (type === 'success') {
+        setTimeout(() => {
+          $messageEl.hide();
+        }, 3000);
+      }
+    }
+  </script>
+</body>
+
+</html>

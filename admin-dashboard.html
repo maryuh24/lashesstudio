@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - LashStudio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .admin-nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .admin-nav-btn {
+      padding: 1rem 2rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .admin-nav-btn:hover {
+      background: var(--primary-dark);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .admin-nav-btn.active {
+      background: var(--primary-dark);
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .admin-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-card {
+        padding: 1.25rem;
+      }
+
+      .stat-card h3 {
+        font-size: 1.75rem;
+      }
+
+      .stat-card p {
+        font-size: 0.85rem;
+      }
+
+      .admin-nav {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .admin-nav-btn {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        text-align: center;
+      }
+
+      .dashboard-header {
+        margin-bottom: 2rem;
+      }
+
+      .dashboard-title {
+        font-size: 2rem;
+      }
+
+      .dashboard-subtitle {
+        font-size: 1rem;
+      }
+
+      main {
+        padding: 1rem;
+      }
+
+      .dashboard-container {
+        margin: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-stats {
+        gap: 0.75rem;
+      }
+
+      .stat-card {
+        padding: 1rem;
+      }
+
+      .stat-card h3 {
+        font-size: 1.5rem;
+      }
+
+      .dashboard-title {
+        font-size: 1.75rem;
+      }
+
+      .dashboard-subtitle {
+        font-size: 0.9rem;
+      }
+
+      .admin-nav-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio Admin</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="admin-dashboard.html" class="nav-link active">Dashboard</a></li>
+        <li><a href="admin-appointments.html" class="nav-link">Appointments</a></li>
+        <li><a href="admin-services.html" class="nav-link">Services</a></li>
+        <li><a href="admin-users.html" class="nav-link">Users</a></li>
+        <li><a href="admin-profile.html" class="nav-link">Profile</a></li>
+        <li><a href="#" class="nav-link" id="logoutBtn">Logout</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+        <p class="dashboard-subtitle">Manage your lash studio system</p>
+      </div>
+
+      <div class="admin-stats" id="adminStats">
+        <div class="stat-card">
+          <h3 id="totalAppointments">-</h3>
+          <p>Total Appointments</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="pendingAppointments">-</h3>
+          <p>Pending Approval</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalServices">-</h3>
+          <p>Services</p>
+        </div>
+        <div class="stat-card">
+          <h3 id="totalUsers">-</h3>
+          <p>Total Users</p>
+        </div>
+      </div>
+
+      <div class="admin-nav">
+        <a href="admin-appointments.html" class="admin-nav-btn">Manage Appointments</a>
+        <a href="admin-services.html" class="admin-nav-btn">Manage Services</a>
+        <a href="admin-users.html" class="admin-nav-btn">Manage Users</a>
+        <a href="admin-profile.html" class="admin-nav-btn">Edit Profile</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+      // Hamburger menu functionality
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      requireAuth();
+      checkAdminAccess();
+      loadAdminStats();
+    });
+  </script>
+</body>
+</html>
+

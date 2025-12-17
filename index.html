@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LashStudio - Premium Lash Extension Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="logo">LashStudio</a>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="login.html" class="nav-link">Login</a></li>
+        <li><a href="register.html" class="nav-link">Register</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="hero-content">
+      <h1>Welcome to LashStudio</h1>
+      <p class="subtitle">Book your perfect lash extensions with our expert artists. Experience premium lash services with easy online booking and personalized styling.</p>
+      <div class="buttons">
+        <a href="register.html" class="cta-button">Get Started</a>
+        <a href="login.html" class="cta-button">Sign In</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- <footer>
+    <p>&copy; 2025 LashStudio - Premium Lash Extension Services</p>
+  </footer> -->
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Hamburger menu functionality
+      $('#hamburger').on('click', function() {
+        $(this).toggleClass('active');
+        $('#nav-menu').toggleClass('active');
+      });
+
+      // Close menu when clicking on nav links
+      $('.nav-link').on('click', function() {
+        $('#hamburger').removeClass('active');
+        $('#nav-menu').removeClass('active');
+      });
+
+      // Create floating particles
+      function createParticles() {
+        const $particlesContainer = $('#particles');
+        const particleCount = 20;
+
+        for (let i = 0; i < particleCount; i++) {
+          const $particle = $('<div>', { class: 'particle' });
+          $particle.css({
+            'left': Math.random() * 100 + '%',
+            'width': Math.random() * 4 + 2 + 'px',
+            'height': Math.random() * 4 + 2 + 'px',
+            'animation-delay': Math.random() * 15 + 's',
+            'animation-duration': (Math.random() * 10 + 10) + 's'
+          });
+          $particlesContainer.append($particle);
+        }
+      }
+
+      // Initialize particles
+      createParticles();
+
+      // Smooth scrolling for anchor links
+      $('a[href^="#"]').on('click', function(e) {
+        e.preventDefault();
+        const target = $($(this).attr('href'));
+        if (target.length) {
+          $('html, body').animate({
+            scrollTop: target.offset().top
+          }, 500);
+        }
+      });
+
+      // Redirect if logged in
+      redirectIfLoggedIn();
+    });
+  </script>
+</body>
+</html>
