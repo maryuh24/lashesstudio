@@ -291,7 +291,7 @@ async function loadAdminServices() {
     }
 
     $.each(services, function(i, service) {
-      const imageUrl = `${API_URL.replace('/api', '')}/${service.image_path}`;
+      const imageUrl = `${API_BASE_URL}/${service.image_path}`;
       const durationDisplay = service.duration ? `${service.duration} min` : 'N/A';
       const $card = $('<div>', { class: 'service-admin-card' });
       $card.html(`
@@ -300,7 +300,7 @@ async function loadAdminServices() {
         </div>
         <div class="service-admin-card-body">
           <div class="service-admin-image-container">
-            <img src="${imageUrl}" alt="${service.name}" class="service-admin-image" onerror="this.src='http://127.0.0.1:8000/storage/uploads/default.png'">
+            <img src="${imageUrl}" alt="${service.name}" class="service-admin-image" onerror="this.src='${API_BASE_URL}/storage/uploads/default.png'">
           </div>
           <div class="service-admin-info">
             <div class="service-admin-info-item">
@@ -742,7 +742,7 @@ async function loadAdminProfile() {
     $('#profileUsername').val(user.username);
     $('#profileEmail').val(user.email);
     
-    const avatarUrl = user.avatar ? `${API_URL.replace('/api', '')}/${user.avatar}` : 'http://127.0.0.1:8000/storage/uploads/default.png';
+    const avatarUrl = user.avatar ? `${API_BASE_URL}/${user.avatar}` : `${API_BASE_URL}/storage/uploads/default.png`;
     $('#avatarPreview').attr('src', avatarUrl);
   } catch (err) {
     console.error('Error loading profile:', err);

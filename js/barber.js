@@ -339,7 +339,7 @@ async function loadLashArtistProfile() {
       } else if (user.avatar) {
         $profileImage.attr('src', user.avatar);
       } else {
-        $profileImage.attr('src', `${API_URL.replace('/api', '')}/storage/uploads/profile.png`);
+        $profileImage.attr('src', `${API_BASE_URL}/storage/uploads/profile.png`);
       }
     }
   } catch (err) {

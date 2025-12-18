@@ -13,7 +13,7 @@ async function redirectIfLoggedIn() {
   const token = localStorage.getItem("authToken");
   if (token) {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/users/me", {
+      const res = await fetch(`${API_URL}/users/me`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       

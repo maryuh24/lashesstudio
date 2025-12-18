@@ -1,6 +1,5 @@
 // main.js - Lash Studio Booking System (jQuery Version)
-
-const API_URL = 'http://127.0.0.1:8000/api';
+// Note: API_URL is defined in config.js - make sure config.js is loaded before this file
 
 // Time slot mapping: start time -> display format
 const TIME_SLOTS = {
@@ -462,11 +461,11 @@ async function loadServices() {
     }
 
     $.each(services, function(i, service) {
-      const imageUrl = `${API_URL.replace('/api', '')}/${service.image_path}`;
+      const imageUrl = `${API_BASE_URL}/${service.image_path}`;
       const durationDisplay = service.duration ? `${service.duration} min` : 'N/A';
       const $card = $('<div>', { class: 'service-card' });
       $card.html(`
-        <img src="${imageUrl}" alt="${service.name}" onerror="this.src='http://127.0.0.1:8000/storage/uploads/default.png'">
+        <img src="${imageUrl}" alt="${service.name}" onerror="this.src='${API_BASE_URL}/storage/uploads/default.png'">
         <div class="service-info">
           <h3>${service.name}</h3>
           <p class="service-description">${service.description || 'Professional service'}</p>
@@ -566,12 +565,12 @@ async function loadLashArtists() {
       const specialty = artist.specialty || artist.specialization || 'Expert Lash Artist';
       // Use image_url if provided, otherwise construct from image_path or use default
       const imageUrl = artist.image_url || 
-        (artist.image_path ? `${API_URL.replace('/api', '')}/storage/${artist.image_path}` : null) ||
-        'http://127.0.0.1:8000/storage/uploads/profile.png';
+        (artist.image_path ? `${API_BASE_URL}/storage/${artist.image_path}` : null) ||
+        `${API_BASE_URL}/storage/uploads/profile.png`;
       
       const $card = $('<div>', { class: 'barber-card lash-artist-card' });
       $card.html(`
-        <img src="${imageUrl}" alt="${artist.name || 'Lash Artist'}" onerror="this.src='http://127.0.0.1:8000/storage/uploads/profile.png'">
+        <img src="${imageUrl}" alt="${artist.name || 'Lash Artist'}" onerror="this.src='${API_BASE_URL}/storage/uploads/profile.png'">
         <div class="barber-info">
           <h3>${artist.name || 'Unknown Lash Artist'}</h3>
           <p class="barber-specialty">${specialty}</p>
